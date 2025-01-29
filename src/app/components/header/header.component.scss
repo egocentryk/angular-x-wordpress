@@ -1,0 +1,30 @@
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+
+    span {
+      cursor: pointer;
+    }
+
+    ul {
+      display: block;
+      list-style: none;
+
+      li {
+        cursor: pointer;
+
+        &:hover {
+          color: red;
+        }
+      }
+    }
+  }
+}
