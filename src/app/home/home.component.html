@@ -1,1 +1,3 @@
-<p>home works!</p>
+@for (post of postItems(); track post.id) {
+<p>{{ post.title.rendered }}</p>
+}
