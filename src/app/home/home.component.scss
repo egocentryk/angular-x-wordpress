@@ -1,6 +1,7 @@
 .articles {
   &__item {
     h2 {
+      cursor: pointer;
       font-size: 2.5rem;
     }
   }

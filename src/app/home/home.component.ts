@@ -2,10 +2,11 @@ import { Component, inject, OnInit, signal } from '@angular/core'
 import { PostsService } from '../services/posts.service'
 import { Post } from '../model/post.type'
 import { catchError } from 'rxjs'
+import { RouterLink } from '@angular/router'
 
 @Component({
   selector: 'app-home',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })

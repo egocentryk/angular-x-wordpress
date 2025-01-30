@@ -1,0 +1,49 @@
+.article {
+  h1 {
+    font-size: 2.5rem;
+  }
+  
+  &__item {
+    line-height: 1.7rem;
+
+    ::ng-deep {
+      p {
+        line-height: 1.8rem;
+      }
+      
+      h2 {
+        font-size: 1.75rem !important;
+        font-weight: 200;
+        margin-top: 3vw;
+      }
+
+      h3 {
+        font-size: 1.5rem !important;
+        font-weight: 200;
+      }
+
+      hr {
+        max-width: 100px;
+        background-color: #3a3a3a;
+        margin: 2vw auto;
+      }
+
+      img {
+        box-sizing: border-box;
+        height: auto;
+        max-width: 100%;
+        vertical-align: bottom;
+        margin: 2vw auto;
+      }
+
+      strong {
+        font-weight: 600;
+      }
+
+      .footnote_referrer {
+        display: none;
+      }
+    }
+
+  }
+}

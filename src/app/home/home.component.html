@@ -1,7 +1,7 @@
 <section class="articles">
   @for (post of postItems(); track post.id) {
     <article class="articles__item">
-      <h2 class="barlow-thin">{{ post.title.rendered }}</h2>
+      <h2 class="barlow-thin" routerLink="{{ post.slug }}">{{ post.title.rendered }}</h2>
     </article>
   }
 </section>
