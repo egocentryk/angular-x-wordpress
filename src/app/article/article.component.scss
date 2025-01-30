@@ -1,4 +1,5 @@
 .article {
+  margin: 0 0 3vw;
   h1 {
     font-size: 2.5rem;
   }
@@ -40,8 +41,36 @@
         font-weight: 600;
       }
 
-      .footnote_referrer {
+      .footnote_referrer, .footnote_container_prepare {
         display: none;
+      }
+
+      table {
+        border-spacing: 0;
+
+        caption {
+          text-align: left;
+          font-weight: 400;
+        }
+
+        tbody {
+          font-size: 0.7rem;
+
+          tr {
+            th {
+              display: none;
+            }
+          }
+
+          a {
+            color: red;
+            text-decoration: none;
+
+            &:hover {
+              color: initial
+            }
+          }
+        }
       }
     }
 

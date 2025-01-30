@@ -1,7 +1,5 @@
-import { Component, inject, OnInit, signal } from '@angular/core'
+import { Component, inject } from '@angular/core'
 import { PostsService } from '../services/posts.service'
-import { Post } from '../model/post.type'
-import { catchError } from 'rxjs'
 import { RouterLink } from '@angular/router'
 
 @Component({
@@ -10,21 +8,9 @@ import { RouterLink } from '@angular/router'
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
-export class HomeComponent implements OnInit {
-  postService = inject(PostsService)
-  postItems = signal<Array<Post>>([])
+export class HomeComponent {
+  private postService = inject(PostsService)
 
-  ngOnInit(): void {
-    this.postService
-      .getPostsFromApi()
-      .pipe(
-        catchError((err) => {
-          console.log(err)
-          throw err
-        })
-      )
-      .subscribe((posts) => {
-        this.postItems.set(posts)
-      })
-  }
+  isLoading = this.postService.isLoading
+  posts = this.postService.newPosts
 }
