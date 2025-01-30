@@ -1,27 +1,15 @@
-import { Injectable } from '@angular/core';
-import { Post } from '../model/post.type';
+import { inject, Injectable } from '@angular/core'
+import { Post } from '../model/post.type'
+import { HttpClient } from '@angular/common/http'
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PostsService {
-  postItems: Array<Post> = [
-    {
-      id: 2222,
-      slug: 'some-king-of-title',
-      status: 'publish',
-      title: {
-        rendered: 'Some kind of title'
-      }
-    },
-    {
-      id: 1577,
-      slug: 'another-not-that-long-article-title',
-      status: 'publish',
-      title: {
-        rendered: 'Another not that long article title'
-      }
-    }
-  ]
-  constructor() { }
+  http = inject(HttpClient)
+
+  getPostsFromApi() {
+    const url = `https://kolektyw.xyz/wp-json/wp/v2/posts`
+    return this.http.get<Array<Post>>(url)
+  }
 }
