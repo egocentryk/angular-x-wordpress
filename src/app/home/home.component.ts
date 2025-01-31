@@ -1,10 +1,11 @@
 import { Component, inject } from '@angular/core'
 import { PostsService } from '../services/posts.service'
 import { RouterLink } from '@angular/router'
+import { TruncatePipe } from '../pipes/truncate.pipe'
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink],
+  imports: [RouterLink, TruncatePipe],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })

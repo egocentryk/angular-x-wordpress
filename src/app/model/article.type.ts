@@ -8,6 +8,9 @@ export type Article = {
   content: {
     rendered: string
   }
+  excerpt: {
+    rendered: string
+  }
   author: number
   categories: string[]
   tags: string[]

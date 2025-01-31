@@ -1,9 +1,9 @@
 import { computed, effect, inject, Injectable } from '@angular/core'
-import { Post } from '../model/post.type'
 import { HttpClient } from '@angular/common/http'
 import { environment } from '../../environments/environment.development'
 import { rxResource } from '@angular/core/rxjs-interop'
 import { catchError, map, tap } from 'rxjs'
+import { Article } from '../model/article.type'
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +16,7 @@ export class PostsService {
   private postResource = rxResource({
     loader: () => {
       console.log('Before http request')
-      return this.http.get<Array<Post>>(this.url).pipe(
+      return this.http.get<Array<Article>>(this.url).pipe(
         catchError((err) => {
           console.log(err)
           throw err
@@ -28,7 +28,7 @@ export class PostsService {
     },
   })
 
-  newPosts = computed(() => this.postResource.value() ?? ([] as Post[]))
+  newPosts = computed(() => this.postResource.value() ?? ([] as Article[]))
   isLoading = this.postResource.isLoading
 
   loadingEffect = effect(() =>
