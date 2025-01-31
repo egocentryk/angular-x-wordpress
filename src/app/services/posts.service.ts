@@ -9,7 +9,7 @@ import { catchError, map, tap } from 'rxjs'
   providedIn: 'root',
 })
 export class PostsService {
-  private url = `${environment.apiUrl}posts`
+  private url = `${environment.api.url}/posts`
 
   private http = inject(HttpClient)
 

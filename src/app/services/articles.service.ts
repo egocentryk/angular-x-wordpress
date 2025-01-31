@@ -10,7 +10,7 @@ export class ArticlesService {
   http = inject(HttpClient)
 
   getArticleFromApi(slug: string | null) {
-    const url = `${environment.apiUrl}posts?slug=${slug}`
+    const url = `${environment.api.url}/posts?slug=${slug}`
     return this.http.get<Array<Article>>(url)
   }
 }

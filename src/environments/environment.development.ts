@@ -1,4 +1,12 @@
 export const environment = {
   production: false,
-  apiUrl: 'https://kolektyw.xyz/wp-json/wp/v2/',
+  api: {
+    url: 'https://kolektyw.xyz/wp-json/wp/v2',
+    paths: {
+      author: '/users/',
+      categories: '/categories?post=',
+      comments: '/comments?post=',
+      tags: '/tags?post=',
+    },
+  },
 }
