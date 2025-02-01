@@ -4,6 +4,13 @@ export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
+    // redirectTo: 'page/1',
+    loadComponent: () =>
+      import('./home/home.component').then((m) => m.HomeComponent),
+  },
+  {
+    path: 'page/:page',
+    pathMatch: 'full',
     loadComponent: () =>
       import('./home/home.component').then((m) => m.HomeComponent),
   },

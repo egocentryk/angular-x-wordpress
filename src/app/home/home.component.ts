@@ -27,7 +27,7 @@ import {
   RouterLink,
 } from '@angular/router'
 import { Article } from '../model/article.type'
-import { AsyncPipe } from '@angular/common'
+import { AsyncPipe, DatePipe } from '@angular/common'
 import { TruncatePipe } from '../pipes/truncate.pipe'
 import { NgFor } from '@angular/common'
 
@@ -39,10 +39,11 @@ type ArticleItem = Article & {
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  imports: [NgFor, AsyncPipe, TruncatePipe, RouterLink],
+  imports: [AsyncPipe, DatePipe, TruncatePipe, RouterLink],
   styleUrl: './home.component.scss',
 })
 export class HomeComponent implements OnInit {
+  pageCount: number = 0
   mergedArray$: Observable<ArticleItem[]>
 
   constructor(
@@ -51,12 +52,23 @@ export class HomeComponent implements OnInit {
   ) {
     this.mergedArray$ = this.route.params.pipe(
       switchMap((params) => {
-        return from(this.getQuestions(1))
+        if (!params['page']) {
+          params = {
+            page: 1,
+          }
+
+          // return of([])
+        }
+
+        console.log('params: ', params)
+
+        return from(this.getQuestions(+params['page']))
       })
     )
   }
 
   async getQuestions(page: number): Promise<ArticleItem[]> {
+    console.log(page)
     const articles$ = this.articleService.getArticles(page)
     const articles = await lastValueFrom(articles$)
 

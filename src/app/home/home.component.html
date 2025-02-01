@@ -1,22 +1,21 @@
 <section class="articles">
-  <article class="articles__item" *ngFor="let article of mergedArray$ | async">
-    <div class="col-xs-1 col-md-1">
-      {{ article?.comments?.length }}<br />answers
-    </div>
-    <h2 class="barlow-thin" routerLink="{{ article.slug }}">{{ article.title.rendered }}</h2>
-  
-    <div [innerHTML]="article.excerpt.rendered | truncate: 360"></div>
-  
-    <div class="row">
-      <div>
-        <span *ngFor="let tag_name of article.tag_names">
-          <a href="#" class="badge bg-secondary">{{ tag_name }}</a>&nbsp;
-        </span>
-      </div>
-      <div class="col-xs-3 col-md-3">
-        <span>{{ article.date }}</span>
-      </div>
-    </div>
-    <hr />
-  </article>
+  @for (article of mergedArray$ | async; track article.id) {
+    <article class="articles__item">
+      <h2 class="barlow-thin" routerLink="{{ '/' + article.slug }}">{{ article.title.rendered }}</h2>
+    
+      <div [innerHTML]="article.excerpt.rendered | truncate: 360"></div>
+    
+      <ul class="tags">
+        @for (tag_name of article.tag_names; track $index) {
+          <li class="tags__item">{{ tag_name }}</li>
+        }
+      </ul>
+    
+      <ul class="info">
+        <li>{{ article?.comments?.length }} komentarzy</li>
+        <li>{{ article.date | date: 'short' }}</li>
+      </ul>
+      <hr />
+    </article>
+  }
 </section>
