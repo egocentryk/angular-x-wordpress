@@ -6,7 +6,8 @@ export const environment = {
       author: '/users/',
       categories: '/categories?post=',
       comments: '/comments?post=',
-      tags: '/tags?post=',
+      posts: '/posts',
+      tags: '/tags?include=',
     },
   },
 }

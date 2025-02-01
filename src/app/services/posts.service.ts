@@ -2,7 +2,7 @@ import { computed, inject, Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { environment } from '../../environments/environment.development'
 import { rxResource } from '@angular/core/rxjs-interop'
-import { catchError, map, tap } from 'rxjs'
+import { catchError, map, switchMap, tap } from 'rxjs'
 import { Article } from '../model/article.type'
 
 @Injectable({
