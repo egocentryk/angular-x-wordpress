@@ -19,16 +19,18 @@ export class ArticleService {
 
   getTags(ids: string): Observable<Tag[]> {
     const url = environment.api.url + environment.api.paths.tags + ids
-    return this.http.get<any>(url)
+    return this.http.get<Tag[]>(url)
   }
 
   getComments(ids: string): Observable<Comment[]> {
     const url = environment.api.url + environment.api.paths.comments + ids
-    return this.http.get<any>(url)
+    return this.http.get<Comment[]>(url)
   }
 
   getHeaders(): Observable<HttpResponse<Article[]>> {
-    const url = `${environment.api.url}${environment.api.paths.posts}?per_page=5`
-    return this.http.get<HttpResponse<Article[]>>(url)
+    const url = `${environment.api.url}${environment.api.paths.posts}?per_page=10`
+    return this.http.get<Article[]>(url, {
+      observe: 'response',
+    })
   }
 }

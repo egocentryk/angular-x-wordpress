@@ -7,7 +7,7 @@ export type User = {
   avatar_url: Avatars
 }
 
-type Avatars = {
+export type Avatars = {
   24: string
   48: string
   96: string

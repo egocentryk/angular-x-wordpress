@@ -18,4 +18,12 @@
       <hr />
     </article>
   }
+
+  <nav aria-label="Page navigation example">
+    <ul class="pagination">
+      @for (page of [].constructor(pageCount); track $index) {
+        <li routerLink="/page/{{ $index + 1 }}">{{ $index + 1 }}</li>
+      }
+    </ul>
+  </nav>
 </section>

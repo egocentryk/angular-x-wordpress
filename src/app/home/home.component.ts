@@ -29,7 +29,6 @@ import {
 import { Article } from '../model/article.type'
 import { AsyncPipe, DatePipe } from '@angular/common'
 import { TruncatePipe } from '../pipes/truncate.pipe'
-import { NgFor } from '@angular/common'
 
 type ArticleItem = Article & {
   tag_names: string[]
@@ -60,15 +59,12 @@ export class HomeComponent implements OnInit {
           // return of([])
         }
 
-        console.log('params: ', params)
-
         return from(this.getQuestions(+params['page']))
       })
     )
   }
 
   async getQuestions(page: number): Promise<ArticleItem[]> {
-    console.log(page)
     const articles$ = this.articleService.getArticles(page)
     const articles = await lastValueFrom(articles$)
 
@@ -76,17 +72,17 @@ export class HomeComponent implements OnInit {
     const tags$ = this.articleService.getTags(tagIDs)
     const tags = await lastValueFrom(tags$)
 
-    const articleIDs = articles.map((question) => question.id).join(',')
+    const articleIDs = articles.map((article) => article.id).join(',')
     const comments$ = this.articleService.getComments(articleIDs)
     const comments = await lastValueFrom(comments$)
 
     const result = articles.map((article) => {
       const relatedTags = article.tags
-        .map((tag_ID) => tags.find((tag) => tag.id == tag_ID)?.name)
+        .map((tag_ID) => tags.find((tag) => tag.id == tag_ID)?.name!)
         .filter((exists) => !!exists)
 
       const relatedComments = comments.filter(
-        (answer) => answer.post === article.id
+        (comment) => comment.post === article.id
       )
 
       return {
@@ -99,8 +95,11 @@ export class HomeComponent implements OnInit {
     return result as any
   }
 
-  getQuestionCount() {
-    return null
+  getPagesCount() {
+    this.articleService.getHeaders().subscribe((articles) => {
+      this.pageCount = +articles.headers.get('X-WP-TotalPages')!
+      console.log('pageCount', this.pageCount)
+    })
   }
 
   goToPage(page: number) {
@@ -108,6 +107,6 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getQuestionCount()
+    this.getPagesCount()
   }
 }
