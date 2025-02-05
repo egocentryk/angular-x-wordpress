@@ -4,12 +4,13 @@ import { Observable, from, lastValueFrom } from 'rxjs'
 import { switchMap } from 'rxjs/operators'
 import { ActivatedRoute, RouterLink } from '@angular/router'
 import { Article } from '../model/article.type'
+import { Comment } from '../model/comment.type'
 import { AsyncPipe, DatePipe } from '@angular/common'
 import { TruncatePipe } from '../pipes/truncate.pipe'
 
 type ArticleItem = Article & {
   tag_names: string[]
-  comments: string[]
+  comments: Comment[]
 }
 
 @Component({
@@ -65,7 +66,7 @@ export class HomeComponent implements OnInit {
       return {
         ...article,
         tag_names: relatedTags,
-        comments: relatedComments as unknown as string[],
+        comments: relatedComments,
       }
     })
 
