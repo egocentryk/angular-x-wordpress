@@ -1,31 +1,8 @@
-// import { Component, inject } from '@angular/core'
-// import { PostsService } from '../services/posts.service'
-// import { RouterLink } from '@angular/router'
-// import { TruncatePipe } from '../pipes/truncate.pipe'
-
-// @Component({
-//   selector: 'app-home',
-//   imports: [RouterLink, TruncatePipe],
-//   templateUrl: './home.component.html',
-//   styleUrl: './home.component.scss',
-// })
-// export class HomeComponent {
-//   private postService = inject(PostsService)
-
-//   isLoading = this.postService.isLoading
-//   posts = this.postService.newPosts
-// }
-
 import { Component, OnInit } from '@angular/core'
 import { ArticleService } from '../services/article.service'
-import { Observable, forkJoin, of, from, lastValueFrom } from 'rxjs'
-import { map, switchMap, filter } from 'rxjs/operators'
-import {
-  Router,
-  NavigationEnd,
-  ActivatedRoute,
-  RouterLink,
-} from '@angular/router'
+import { Observable, from, lastValueFrom } from 'rxjs'
+import { switchMap } from 'rxjs/operators'
+import { ActivatedRoute, RouterLink } from '@angular/router'
 import { Article } from '../model/article.type'
 import { AsyncPipe, DatePipe } from '@angular/common'
 import { TruncatePipe } from '../pipes/truncate.pipe'
@@ -59,12 +36,12 @@ export class HomeComponent implements OnInit {
           // return of([])
         }
 
-        return from(this.getQuestions(+params['page']))
+        return from(this.getArticlesFromApi(+params['page']))
       })
     )
   }
 
-  async getQuestions(page: number): Promise<ArticleItem[]> {
+  async getArticlesFromApi(page: number): Promise<ArticleItem[]> {
     const articles$ = this.articleService.getArticles(page)
     const articles = await lastValueFrom(articles$)
 
@@ -88,23 +65,20 @@ export class HomeComponent implements OnInit {
       return {
         ...article,
         tag_names: relatedTags,
-        comments: relatedComments,
+        comments: relatedComments as unknown as string[],
       }
     })
 
-    return result as any
+    return result
   }
 
   getPagesCount() {
     this.articleService.getHeaders().subscribe((articles) => {
       this.pageCount = +articles.headers.get('X-WP-TotalPages')!
-      console.log('pageCount', this.pageCount)
     })
   }
 
-  goToPage(page: number) {
-    console.log(page)
-  }
+  goToPage(page: number) {}
 
   ngOnInit(): void {
     this.getPagesCount()
