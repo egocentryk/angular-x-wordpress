@@ -1,4 +1,8 @@
-# Kolektyw
+# Angular x Wordpress
+
+<p align="center">
+  <a href="https://angular.dev/" target="blank"><img src="https://angular.dev/assets/images/press-kit/angular_icon_gradient.gif" width="320" alt="Nest Logo" /></a>
+</p>
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.1.4.
 
