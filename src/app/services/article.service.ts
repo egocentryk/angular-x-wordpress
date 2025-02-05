@@ -1,10 +1,11 @@
-import { Injectable } from '@angular/core'
+import { computed, effect, Injectable, signal } from '@angular/core'
 import { HttpClient, HttpResponse } from '@angular/common/http'
 import { environment } from '../../environments/environment.development'
 import { Article } from '../model/article.type'
 import { Comment } from '../model/comment.type'
 import { Tag } from '../model/tag.type'
-import { Observable } from 'rxjs'
+import { map, Observable, tap } from 'rxjs'
+import { rxResource } from '@angular/core/rxjs-interop'
 
 @Injectable({
   providedIn: 'root',
@@ -12,23 +13,62 @@ import { Observable } from 'rxjs'
 export class ArticleService {
   constructor(private http: HttpClient) {}
 
-  getArticles(page: number): Observable<Article[]> {
-    const url = `${environment.api.url}${environment.api.paths.posts}?page=${page}&per_page=10`
-    return this.http.get<Article[]>(url)
-  }
+  private articlesApiUrl: string =
+    environment.api.url + environment.api.paths.posts
 
-  getTags(ids: string): Observable<Tag[]> {
-    const url = environment.api.url + environment.api.paths.tags + ids
-    return this.http.get<Tag[]>(url)
-  }
+  private tagsApiUrl: string = environment.api.url + environment.api.paths.tags
 
-  getComments(ids: string): Observable<Comment[]> {
-    const url = environment.api.url + environment.api.paths.comments + ids
-    return this.http.get<Comment[]>(url)
-  }
+  private commentsApiUrl: string =
+    environment.api.url + environment.api.paths.comments
+
+  selectedPageId = signal<number>(1)
+  selectedTagsIds = signal<string>('')
+  selectedCommentsIds = signal<string>('')
+
+  allArticles = rxResource({
+    request: () => this.selectedPageId(),
+    loader: ({ request: pageId }) => {
+      return this.http
+        .get<Article[]>(`${this.articlesApiUrl}?page=${pageId}&per_page=10`)
+        .pipe(map((articles) => articles))
+    },
+  })
+
+  articles = computed(() => this.allArticles.value() ?? ([] as Article[]))
+
+  isArticlesLoading = this.allArticles.isLoading
+
+  loadingEff = effect(() =>
+    console.log('loading: ', this.allArticles.isLoading())
+  )
+  articlesEff = effect(() => console.log('articles: ', this.articles()))
+
+  private allTags = rxResource({
+    request: () => this.selectedTagsIds(),
+    loader: ({ request: tagsId }) => {
+      return this.http
+        .get<Tag[]>(`${this.tagsApiUrl}${tagsId}`)
+        .pipe(map((tags) => tags))
+    },
+  })
+
+  tags = computed(() => this.allTags.value() ?? ([] as Tag[]))
+
+  tagsEff = effect(() => console.log('tags: ', this.tags()))
+
+  private allComments = rxResource({
+    request: () => this.selectedCommentsIds(),
+    loader: ({ request: commentsId }) => {
+      return this.http
+        .get<Comment[]>(`${this.commentsApiUrl}${commentsId}`)
+        .pipe(map((tags) => tags))
+    },
+  })
+
+  comments = computed(() => this.allComments.value() ?? ([] as Comment[]))
 
   getHeaders(): Observable<HttpResponse<Article[]>> {
-    const url = `${environment.api.url}${environment.api.paths.posts}?per_page=10`
+    const url: string = `${environment.api.url}${environment.api.paths.posts}?per_page=10`
     return this.http.get<Article[]>(url, {
       observe: 'response',
     })

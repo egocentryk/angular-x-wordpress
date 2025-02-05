@@ -1,5 +1,8 @@
 <section class="articles">
-  @for (article of mergedArray$ | async; track article.id) {
+  @if (isLoading()) {
+    <div>... loading articles</div>
+  } @else {
+    @for (article of mergedArray$ | async; track article.id) {
     <article class="articles__item">
       <h2 class="barlow-thin" routerLink="{{ '/' + article.slug }}">{{ article.title.rendered }}</h2>
     
@@ -7,7 +10,7 @@
     
       <ul class="tags">
         @for (tag_name of article.tag_names; track $index) {
-          <li class="tags__item">{{ tag_name }}</li>
+        <li class="tags__item">{{ tag_name }}</li>
         }
       </ul>
     
@@ -17,13 +20,15 @@
       </ul>
       <hr />
     </article>
-  }
-
-  <nav aria-label="Page navigation example">
-    <ul class="pagination">
-      @for (page of [].constructor(pageCount); track $index) {
+    }
+    
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        @for (page of [].constructor(pageCount); track $index) {
         <li routerLink="/page/{{ $index + 1 }}">{{ $index + 1 }}</li>
-      }
-    </ul>
-  </nav>
+        }
+      </ul>
+    </nav>
+  }
+  
 </section>
