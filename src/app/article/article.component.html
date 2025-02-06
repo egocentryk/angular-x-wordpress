@@ -5,6 +5,8 @@
     @for (article of article(); track article.id) {
       <h1 class="barlow-light">{{ article.title.rendered }}</h1>
       <article class="article__item barlow-light" [innerHTML]="article.content.rendered"></article>
+    } @empty {
+      <div>Article not found</div>
     }
   }
 </section>
