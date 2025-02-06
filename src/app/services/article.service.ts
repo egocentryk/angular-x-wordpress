@@ -1,11 +1,16 @@
 import { computed, effect, Injectable, signal } from '@angular/core'
-import { HttpClient, HttpResponse } from '@angular/common/http'
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpResponse,
+} from '@angular/common/http'
 import { environment } from '../../environments/environment.development'
 import { Article } from '../model/article.type'
 import { Comment } from '../model/comment.type'
 import { Tag } from '../model/tag.type'
 import { catchError, map, Observable } from 'rxjs'
 import { rxResource } from '@angular/core/rxjs-interop'
+import { setErrorMessage } from '../core/helpers/error-message'
 
 @Injectable({
   providedIn: 'root',
@@ -36,6 +41,11 @@ export class ArticleService {
   })
 
   articles = computed(() => this.allArticles.value() ?? ([] as Article[]))
+  articlesError = computed(() => this.allArticles.error() as HttpErrorResponse)
+  articlesErrorMessage = computed(() =>
+    setErrorMessage(this.articlesError(), 'Article')
+  )
+  articleErrorStatus = computed(() => this.articlesError().status)
 
   isArticlesLoading = this.allArticles.isLoading
 

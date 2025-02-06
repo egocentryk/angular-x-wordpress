@@ -43,6 +43,7 @@ export class HomeComponent implements OnInit {
   }
 
   isLoading = this.articleService.isArticlesLoading
+  errorMessage = this.articleService.articlesErrorMessage
 
   getArticles = (): ArticleItem[] => {
     const articles = this.articleService.articles

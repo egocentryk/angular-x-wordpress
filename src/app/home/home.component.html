@@ -1,6 +1,8 @@
 <section class="articles">
   @if (isLoading()) {
     <div>... loading articles</div>
+  } @else if (errorMessage()) {
+    <div>An error occured: {{ errorMessage() }}</div>
   } @else {
     @for (article of mergedArray$ | async; track article.id) {
     <article class="articles__item">
