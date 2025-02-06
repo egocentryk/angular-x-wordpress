@@ -1,6 +1,10 @@
 <section class="article">
-  @for (article of articleItem(); track article.id) {
-    <h1 class="barlow-light">{{ article.title.rendered }}</h1>
-    <article class="article__item barlow-light" [innerHTML]="article.content.rendered"></article>
+  @if (isLoading()) {
+    <div>... article is loading</div>
+  } @else {
+    @for (article of article(); track article.id) {
+      <h1 class="barlow-light">{{ article.title.rendered }}</h1>
+      <article class="article__item barlow-light" [innerHTML]="article.content.rendered"></article>
+    }
   }
 </section>

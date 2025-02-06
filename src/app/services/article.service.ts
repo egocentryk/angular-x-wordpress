@@ -4,7 +4,7 @@ import { environment } from '../../environments/environment.development'
 import { Article } from '../model/article.type'
 import { Comment } from '../model/comment.type'
 import { Tag } from '../model/tag.type'
-import { map, Observable, tap } from 'rxjs'
+import { catchError, map, Observable } from 'rxjs'
 import { rxResource } from '@angular/core/rxjs-interop'
 
 @Injectable({
@@ -22,6 +22,7 @@ export class ArticleService {
     environment.api.url + environment.api.paths.comments
 
   selectedPageId = signal<number>(1)
+  selectedPageSlug = signal<string>('')
   selectedTagsIds = signal<string>('')
   selectedCommentsIds = signal<string>('')
 
@@ -42,6 +43,25 @@ export class ArticleService {
     console.log('loading: ', this.allArticles.isLoading())
   )
   articlesEff = effect(() => console.log('articles: ', this.articles()))
+
+  private singleArticle = rxResource({
+    request: () => this.selectedPageSlug(),
+    loader: ({ request: slug }) => {
+      return this.http
+        .get<Article[]>(`${this.articlesApiUrl}?slug=${slug}`)
+        .pipe(
+          catchError((err) => {
+            console.log(err)
+            throw err
+          }),
+          map((articles) => articles)
+        )
+    },
+  })
+
+  article = computed(() => this.singleArticle.value() ?? ([] as Article[]))
+
+  isArticleLoading = this.singleArticle.isLoading
 
   private allTags = rxResource({
     request: () => this.selectedTagsIds(),

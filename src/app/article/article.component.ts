@@ -1,8 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core'
-import { ArticlesService } from '../services/articles.service'
 import { Article } from '../model/article.type'
-import { catchError } from 'rxjs'
 import { ActivatedRoute } from '@angular/router'
+import { ArticleService } from '../services/article.service'
 
 @Component({
   selector: 'app-article',
@@ -11,26 +10,19 @@ import { ActivatedRoute } from '@angular/router'
   styleUrl: './article.component.scss',
 })
 export class ArticleComponent implements OnInit {
-  articleService = inject(ArticlesService)
+  private articleService = inject(ArticleService)
   articleItem = signal<Array<Article>>([])
 
-  slug: string | null = ''
+  constructor(private route: ActivatedRoute) {
+    this.articleService.selectedPageSlug.set(
+      this.route.snapshot.paramMap.get('slug')!
+    )
+  }
 
-  constructor(private route: ActivatedRoute) {}
+  isLoading = this.articleService.isArticleLoading
+  article = this.articleService.article
 
   ngOnInit(): void {
-    this.slug = this.route.snapshot.paramMap.get('slug')
-
-    this.articleService
-      .getArticleFromApi(this.slug)
-      .pipe(
-        catchError((err) => {
-          console.log(err)
-          throw err
-        })
-      )
-      .subscribe((article) => {
-        this.articleItem.set(article)
-      })
+    this.articleItem.set(this.article())
   }
 }
