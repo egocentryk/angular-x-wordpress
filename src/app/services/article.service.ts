@@ -14,9 +14,9 @@ import { setErrorMessage } from '../core/helpers/error-message'
 import { Category } from '../model/category.type'
 
 type ArticleItem = Article & {
-  tag_names: string[]
-  comments: Comment[]
   category_names: Category[]
+  comments: Comment[]
+  tag_names: string[]
 }
 
 @Injectable({
@@ -66,8 +66,6 @@ export class ArticleService {
         .join(',') ?? ''
   )
 
-  tagsIdEff = effect(() => console.log('tagsId: ', this.tagsId()))
-
   commentsId = computed(
     () =>
       this.allArticles
@@ -80,8 +78,6 @@ export class ArticleService {
     this.allArticles.value()?.map((article) => article.categories)
   )
 
-  categoryEff = effect(() => console.log('category: ', this.categoryId()))
-
   private singleArticle = rxResource({
     request: () => this.selectedPageSlug(),
     loader: ({ request: slug }) => {
@@ -92,7 +88,10 @@ export class ArticleService {
             console.log(err)
             throw err
           }),
-          map((articles) => articles)
+          map((article) => {
+            //this.selectedArticleId.set(article[0].id)
+            return article
+          })
         )
     },
   })
@@ -168,9 +167,4 @@ export class ArticleService {
   articleErrorStatus = computed(() => this.articlesError().status)
 
   isArticlesLoading = this.allArticles.isLoading
-
-  loadingEff = effect(() =>
-    console.log('loading: ', this.allArticles.isLoading())
-  )
-  articlesEff = effect(() => console.log('articles: ', this.articles()))
 }
