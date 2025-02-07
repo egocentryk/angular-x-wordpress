@@ -4,7 +4,7 @@
   } @else if (errorMessage()) {
     <div>An error occured: {{ errorMessage() }}</div>
   } @else {
-    @for (article of mergedArray$ | async; track article.id) {
+    @for (article of articles(); track article.id) {
     <article class="articles__item">
       <h2 class="barlow-thin" routerLink="{{ '/' + article.slug }}">{{ article.title.rendered }}</h2>
     
@@ -15,6 +15,10 @@
         <li class="tags__item">{{ tag_name }}</li>
         }
       </ul>
+
+      @for (category_name of article.category_names; track $index) {
+        {{ category_name.name }}
+      }
     
       <ul class="info">
         <li>{{ article?.comments?.length }} komentarzy</li>

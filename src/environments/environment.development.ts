@@ -4,7 +4,7 @@ export const environment = {
     url: 'https://kolektyw.xyz/wp-json/wp/v2',
     paths: {
       author: '/users/',
-      categories: '/categories?post=',
+      categories: '/categories',
       comments: '/comments?post=',
       posts: '/posts',
       tags: '/tags?include=',

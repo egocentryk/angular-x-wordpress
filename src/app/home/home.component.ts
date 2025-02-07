@@ -1,87 +1,68 @@
 import { Component, inject, OnInit } from '@angular/core'
 import { ArticleService } from '../services/article.service'
 import { ActivatedRoute, RouterLink } from '@angular/router'
-import { Article } from '../model/article.type'
-import { Comment } from '../model/comment.type'
-import { AsyncPipe, DatePipe } from '@angular/common'
+import { DatePipe } from '@angular/common'
 import { TruncatePipe } from '../pipes/truncate.pipe'
-import { from, Observable, switchMap } from 'rxjs'
-
-type ArticleItem = Article & {
-  tag_names: string[]
-  comments: Comment[]
-}
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  imports: [AsyncPipe, DatePipe, TruncatePipe, RouterLink],
+  imports: [DatePipe, TruncatePipe, RouterLink],
   styleUrl: './home.component.scss',
 })
 export class HomeComponent implements OnInit {
   pageCount: number = 0
-  mergedArray$: Observable<ArticleItem[]>
 
   private articleService = inject(ArticleService)
 
   constructor(private route: ActivatedRoute) {
-    this.mergedArray$ = this.route.params.pipe(
-      switchMap((params) => {
-        if (!params['page']) {
-          params = {
-            page: 1,
-          }
-
-          // return of([])
-        }
-
-        this.articleService.selectedPageId.set(+params['page'])
-
-        return from([this.getArticles()])
-      })
+    this.articleService.selectedPageId.set(
+      +this.route.snapshot.paramMap.get('page')! || 1
     )
   }
 
   isLoading = this.articleService.isArticlesLoading
   errorMessage = this.articleService.articlesErrorMessage
 
-  getArticles = (): ArticleItem[] => {
-    const articles = this.articleService.articles
+  articles = this.articleService.articles
 
-    const tagIDs = articles()
-      .map((article) => article.tags)
-      .join(',')
+  // getArticles = (): ArticleItem[] => {
+  //   const articles = this.articleService.articles
 
-    this.articleService.selectedTagsIds.set(tagIDs)
+  //   const tagIDs = articles()
+  //     .map((article) => article.tags)
+  //     .join(',')
 
-    const tags = this.articleService.tags
+  //   this.articleService.selectedTagsIds.set(tagIDs)
 
-    const articleIDs = articles()
-      .map((article) => article.id)
-      .join(',')
+  //   const tags = this.articleService.tags
 
-    this.articleService.selectedCommentsIds.set(articleIDs)
+  //   const articleIDs = articles()
+  //     .map((article) => article.id)
+  //     .join(',')
 
-    const comments = this.articleService.comments
+  //   this.articleService.selectedCommentsIds.set(articleIDs)
 
-    const result = articles().map((article) => {
-      const relatedTags = article.tags
-        .map((tag_ID) => tags().find((tag) => tag.id == tag_ID)?.name!)
-        .filter((exists) => !!exists)
+  //   const comments = this.articleService.comments
 
-      const relatedComments = comments().filter(
-        (comment) => comment.post === article.id
-      )
+  //   const result = articles().map((article) => {
+  //     const relatedTags = article.tags
+  //       .map((tag_ID) => tags().find((tag) => tag.id == tag_ID)?.name!)
+  //       .filter((exists) => !!exists)
 
-      return {
-        ...article,
-        tag_names: relatedTags,
-        comments: relatedComments,
-      }
-    })
+  //     const relatedComments = comments().filter(
+  //       (comment) => comment.post === article.id
+  //     )
 
-    return result
-  }
+  //     return {
+  //       ...article,
+  //       tag_names: relatedTags,
+  //       comments: relatedComments,
+  //     }
+  //   })
+
+  //   return result
+  // }
 
   getPagesCount() {
     this.articleService.getHeaders().subscribe((articles) => {
